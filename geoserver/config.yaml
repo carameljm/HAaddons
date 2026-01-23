@@ -1,0 +1,24 @@
+name: "GeoServer"
+version: "1.0.0"
+slug: "geoserver"
+description: "GeoServer is an open source server for sharing geospatial data."
+url: "https://geoserver.org/"
+arch:
+  - aarch64
+  - amd64
+startup: "application"
+boot: "auto"
+ports:
+  8080/tcp: 8080
+ports_description:
+  8080/tcp: Web interface
+map:
+  - config:rw
+  - share:rw
+  - media:rw
+options:
+  username: "admin"
+  password: "geoserver"
+schema:
+  username: "str"
+  password: "password"
