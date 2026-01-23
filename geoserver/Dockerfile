@@ -1,5 +1,5 @@
 ARG BUILD_FROM
-FROM docker.osgeo.org/geoserver/geoserver
+FROM kartoza/geoserver:2.26.1
 
 # Install jq for parsing options.json
 USER root
