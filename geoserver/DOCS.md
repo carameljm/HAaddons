@@ -9,9 +9,11 @@
 
 ## Usage
 
-Once started, GeoServer should be accessible at:
+Once started, GeoServer is accessible through:
 
-`http://<your-home-assistant-ip>:8080/geoserver`
+1. The **"Open Web UI"** button on the add-on page.
+2. The **"GeoServer"** link in your Home Assistant sidebar (if enabled).
+3. Direct access at `http://<your-home-assistant-ip>:8080/geoserver`.
 
 ## Configuration
 
