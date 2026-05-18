@@ -17,6 +17,10 @@ RUN curl -J -L -o /tmp/bashio.tar.gz "https://github.com/hassio-addons/bashio/ar
     ln -s /usr/lib/bashio/bashio /usr/bin/bashio && \
     rm -rf /tmp/bashio.tar.gz /tmp/bashio
 
+# Install s6-overlay tools (needed for s6-setuidgid)
+RUN curl -L -s https://github.com/just-containers/s6-overlay/releases/download/v3.2.0.2/s6-overlay-noarch.tar.xz | tar -Jxvf - -C / && \
+    curl -L -s https://github.com/just-containers/s6-overlay/releases/download/v3.2.0.2/s6-overlay-x86_64.tar.xz | tar -Jxvf - -C /
+
 # Copy run script
 COPY run.sh /run.sh
 RUN chmod a+x /run.sh
