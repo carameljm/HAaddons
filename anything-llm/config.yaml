@@ -1,5 +1,5 @@
 name: "AnythingLLM"
-version: "1.12.1"
+version: "1.12.2"
 slug: "anything-llm"
 description: "A full-stack application that turns any document, resource, or content into context that any LLM can use as a reference during chatting."
 url: "https://github.com/Mintplex-Labs/anything-llm"
