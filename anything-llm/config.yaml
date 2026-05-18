@@ -1,0 +1,26 @@
+name: "AnythingLLM"
+version: "1.12.1"
+slug: "anything-llm"
+description: "A full-stack application that turns any document, resource, or content into context that any LLM can use as a reference during chatting."
+url: "https://github.com/Mintplex-Labs/anything-llm"
+arch:
+  - aarch64
+  - amd64
+startup: "application"
+boot: "auto"
+ingress: true
+panel_icon: "mdi:robot-confused"
+panel_title: "AnythingLLM"
+ports:
+  3001/tcp: 3001
+ports_description:
+  3001/tcp: AnythingLLM API/Web interface
+# AnythingLLM uses /app/server/storage for persistence
+map:
+  - config:rw
+  - share:rw
+  - media:rw
+options:
+  STORAGE_DIR: "/config/anything-llm/storage"
+schema:
+  STORAGE_DIR: "str"
