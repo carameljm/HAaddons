@@ -2,31 +2,30 @@
 set -e
 
 CONFIG_PATH=/data/options.json
-echo "[Info] Hermes v3 Startup - Final Mount Attempt Logic"
+echo "[Info] Hermes v3 Startup - Final Fix Attempt (v1.3.5)"
 
-# Wait for supervisor to stabilize
-sleep 3
+# 1. Vind het hermes-pad
+export PATH=$PATH:/root/.local/bin:/usr/local/bin:/opt/hermes/bin
+if ! command -v hermes &> /dev/null; then
+    echo "[Info] Zoeken naar hermes executable..."
+    HERMES_BIN=$(find / -name hermes -type f -executable 2>/dev/null | grep bin/hermes | head -n 1)
+    if [ -n "$HERMES_BIN" ]; then
+        echo "[Info] Hermes gevonden in: $HERMES_BIN"
+        ln -s "$HERMES_BIN" /usr/local/bin/hermes
+    fi
+fi
 
+# 2. Binds (indien mogelijk)
 BIND_SOURCE=$(jq --raw-output '.bind_source // "/share/hermes_windows/data"' $CONFIG_PATH)
 BIND_TARGET=$(jq --raw-output '.bind_target // "/data"' $CONFIG_PATH)
 EXTRA_ENV=$(jq --raw-output '.extra_env // empty' $CONFIG_PATH)
 
-echo "[Info] Configured Bind: $BIND_SOURCE -> $BIND_TARGET"
-
 if [ -d "$BIND_SOURCE" ]; then
-    echo "[Info] Path $BIND_SOURCE exists. Attempting mount -o bind..."
-    # Gebruik expliciet -o bind, dit werkt soms beter in HAOS containers
-    if mount -o bind "$BIND_SOURCE" "$BIND_TARGET"; then
-        echo "[Success] Windows Share succesvol gekoppeld aan $BIND_TARGET"
-    else
-        echo "[Error] Mounten mislukt! Zorg dat Beschermingsmodus (Protection Mode) UIT staat."
-        # Debugging: toon mount foutmelding direct
-        mount -o bind "$BIND_SOURCE" "$BIND_TARGET" 2>&1 || true
-    fi
-else
-    echo "[Error] Bronmap $BIND_SOURCE niet gevonden!"
+    echo "[Info] Koppelen van share..."
+    mount -o bind "$BIND_SOURCE" "$BIND_TARGET" || echo "[Error] Mount mislukt (rechten?)"
 fi
 
+# 3. ENV variabelen (belangrijk voor gateway/root)
 if [ -n "$EXTRA_ENV" ]; then
     IFS=',' read -ra ADDR <<< "$EXTRA_ENV"
     for i in "${ADDR[@]}"; do
@@ -34,10 +33,13 @@ if [ -n "$EXTRA_ENV" ]; then
     done
 fi
 
-export PATH=$PATH:/root/.local/bin:/usr/local/bin:/opt/hermes/bin
 export HOME=/data
 export HERMES_HOME=/data
 mkdir -p /data/.hermes
 
+# 4. Starten
+echo "[Info] Starten van Hermes Gateway..."
 hermes gateway run &
+
+echo "[Info] Klaar voor gebruik. Starten van Terminal..."
 exec ttyd -p 8099 -W bash
