@@ -1,6 +1,6 @@
 name: "Hermes Agent v3"
-description: "Hermes Agent met Windows Share koppeling."
-version: "1.4.0"
+description: "Hermes Agent met Windows Share koppeling (Home-method)."
+version: "1.4.1"
 slug: "hermes_v3"
 init: false
 arch:
@@ -16,4 +16,3 @@ full_access: true
 map:
   - share:rw
   - config:rw
-  - addon_config:rw
