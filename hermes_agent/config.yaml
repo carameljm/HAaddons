@@ -1,6 +1,6 @@
 name: "Hermes Agent (Windows Share)"
-description: "Hermes Agent met automatische Windows Share (Samba) koppeling."
-version: "1.2.1"
+description: "Hermes Agent met aanpasbare Windows Share koppeling."
+version: "1.2.3"
 slug: "hermes_agent_windows"
 init: false
 arch:
@@ -18,9 +18,15 @@ privileged:
 options:
   api_server_enabled: true
   api_server_key: "change-me-local-dev"
+  bind_source: "/share/hermes_windows/data"
+  bind_target: "/data"
+  extra_env: "HERMES_ALLOW_DANGEROUS_ROOT=1,HERMES_ALLOW_ROOT_GATEWAY=1,HERMES_GATEWAY_ENABLED=true,PYTHONUNBUFFERED=1"
 schema:
   api_server_enabled: bool
   api_server_key: str
+  bind_source: str
+  bind_target: str
+  extra_env: str
 ports:
   8642/tcp: 8642
 map:
