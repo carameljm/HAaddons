@@ -1,6 +1,6 @@
 name: "Hermes Agent v3"
 description: "Hermes Agent met Windows Share koppeling (Home-method)."
-version: "1.4.1"
+version: "1.5.0"
 slug: "hermes_v3"
 init: false
 arch:
