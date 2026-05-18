@@ -2,28 +2,32 @@
 set -e
 
 CONFIG_PATH=/data/options.json
-echo "[Info] Hermes v3 Startup - Deep Debug Mode"
+echo "[Info] Hermes v3 Startup - Step-by-Step Mount Logic"
 
-# Debug: check if /share is actually visible to the container
-ls -ld /share || echo "[Error] /share is NOT visible"
-ls -ld /share/hermes_windows/data 2>/dev/null || echo "[Error] Windows share data dir NOT found"
+# Wacht heel even tot de Supervisor alle mappen heeft aangeboden
+sleep 2
 
-BIND_SOURCE=$(jq --raw-output '.bind_source // empty' $CONFIG_PATH)
-BIND_TARGET=$(jq --raw-output '.bind_target // empty' $CONFIG_PATH)
+BIND_SOURCE=$(jq --raw-output '.bind_source // "/share/hermes_windows/data"' $CONFIG_PATH)
+BIND_TARGET=$(jq --raw-output '.bind_target // "/data"' $CONFIG_PATH)
 EXTRA_ENV=$(jq --raw-output '.extra_env // empty' $CONFIG_PATH)
 
 echo "[Info] Configured Bind: $BIND_SOURCE -> $BIND_TARGET"
 
-if [ -n "$BIND_SOURCE" ] && [ -n "$BIND_TARGET" ]; then
-    if [ -d "$BIND_SOURCE" ]; then
-        echo "[Info] Path $BIND_SOURCE exists. Attempting mount..."
-        # Gebruik mount met expliciete types om zeker te zijn
-        mount --bind "$BIND_SOURCE" "$BIND_TARGET" || echo "[Error] Mount failed."
-    else
-        echo "[Error] Source directory $BIND_SOURCE does not exist."
-    fi
+# Check of source bestaat, anders maken we hem
+if [ ! -d "$BIND_SOURCE" ]; then
+    echo "[Info] Aanmaken van share map $BIND_SOURCE..."
+    mkdir -p "$BIND_SOURCE"
 fi
 
+# De cruciale mount stap
+echo "[Info] Poging tot mounten van $BIND_SOURCE op $BIND_TARGET..."
+if mount --bind "$BIND_SOURCE" "$BIND_TARGET"; then
+    echo "[Success] Windows Share succesvol gekoppeld aan $BIND_TARGET"
+else
+    echo "[Error] Mounten mislukt! Controleer of 'Privileged' aan staat in de Add-on instellingen."
+fi
+
+# Omgevingsvariabelen
 if [ -n "$EXTRA_ENV" ]; then
     IFS=',' read -ra ADDR <<< "$EXTRA_ENV"
     for i in "${ADDR[@]}"; do
@@ -34,6 +38,7 @@ fi
 export PATH=$PATH:/root/.local/bin:/usr/local/bin:/opt/hermes/bin
 export HOME=/data
 export HERMES_HOME=/data
+mkdir -p /data/.hermes
 
 hermes gateway run &
 exec ttyd -p 8099 -W bash
