@@ -1,38 +1,46 @@
 #!/bin/bash
 set -e
 
-CONFIG_PATH=/data/options.json
-echo "[Info] Inlezen van configuratie uit $CONFIG_PATH..."
+echo "[Info] Hermes v3 Startup - Surgical Link Mode (v1.4.2)"
 
-BIND_SOURCE=$(jq --raw-output '.bind_source // empty' $CONFIG_PATH)
-BIND_TARGET=$(jq --raw-output '.bind_target // empty' $CONFIG_PATH)
-EXTRA_ENV=$(jq --raw-output '.extra_env // empty' $CONFIG_PATH)
-
-# SYMLINK STRATEGY: Maak links van de share naar /data
-if [ -n "$BIND_SOURCE" ] && [ -d "$BIND_SOURCE" ]; then
-    echo "[Info] Maaken van symlinks van $BIND_SOURCE naar $BIND_TARGET..."
-    for item in "$BIND_SOURCE"/*; do
-        [ -e "$item" ] || continue
-        target_name=$(basename "$item")
-        # Overschrijf lokale data met link naar de share
-        rm -rf "$BIND_TARGET/$target_name"
-        ln -s "$item" "$BIND_TARGET/$target_name"
-        echo "[Info] Gelinkt: $target_name"
-    done
-fi
-
-if [ -n "$EXTRA_ENV" ]; then
-    IFS=',' read -ra ADDR <<< "$EXTRA_ENV"
-    for i in "${ADDR[@]}"; do
-        export "$i"
-    done
-fi
-
+# 1. PATH setup
 export PATH=$PATH:/root/.local/bin:/usr/local/bin:/opt/hermes/bin
-export HOME=/data
-export HERMES_HOME=/data
+if ! command -v hermes &> /dev/null; then
+    HERMES_BIN=$(find / -name hermes -type f -executable 2>/dev/null | grep bin/hermes | head -n 1)
+    [ -n "$HERMES_BIN" ] && ln -s "$HERMES_BIN" /usr/local/bin/hermes
+fi
+
+# 2. LINK LOGIC
+SHARE_DATA="/share/hermes_windows/data"
+
+if [ -d "$SHARE_DATA" ]; then
+    echo "[Info] Windows Share gevonden. Linken van vitale mappen..."
+    
+    ITEMS=("skills" "memories" "sessions" "auth.json" "config.yaml" "state.db")
+    
+    for item in "${ITEMS[@]}"; do
+        if [ -e "$SHARE_DATA/$item" ]; then
+            echo "  Linking $item..."
+            rm -rf "/data/$item"
+            ln -s "$SHARE_DATA/$item" "/data/$item"
+        fi
+    done
+fi
+
+# 3. GLOBAL ENV
+export HERMES_ALLOW_DANGEROUS_ROOT=1
+export HERMES_ALLOW_ROOT_GATEWAY=1
+export HERMES_GATEWAY_ENABLED=true
+export PYTHONUNBUFFERED=1
+export HOME="/data"
+export HERMES_HOME="/data"
+
+mkdir -p /data/.hermes
 chown -R root:root /data/.hermes 2>/dev/null || true
 
-# Start de services
+# 4. START
+echo "[Info] Starten van Hermes Gateway..."
 hermes gateway run &
+
+echo "[Info] Klaar. Hermes is selectief gekoppeld aan de Windows Share."
 exec ttyd -p 8099 -W bash

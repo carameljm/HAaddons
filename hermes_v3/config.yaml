@@ -1,6 +1,6 @@
 name: "Hermes Agent v3"
-description: "Hermes Agent met Windows Share koppeling (Home-method)."
-version: "1.5.0"
+description: "Hermes Agent met Windows Share koppeling (Link-method)."
+version: "1.4.2"
 slug: "hermes_v3"
 init: false
 arch:
@@ -12,7 +12,7 @@ ingress: true
 ingress_port: 8099
 panel_icon: "mdi:console-network"
 panel_title: "Hermes v3"
-full_access: true
+host_network: true
 map:
   - share:rw
   - config:rw
