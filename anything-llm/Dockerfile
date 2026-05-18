@@ -9,15 +9,14 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends jq && \
     rm -rf /var/lib/apt/lists/*
 
-# Copy rootfs
-COPY rootfs /
+# Copy run script
+COPY run.sh /run.sh
+RUN chmod a+x /run.sh
 
-# Ensure execution rights
-RUN chmod a+x /etc/services.d/anythingllm/run
-
-# AnythingLLM storage is at /app/server/storage
-# We want to link it to /config/anything-llm/storage for HA persistence
+# Ensure storage directory exists and has correct permissions
 RUN mkdir -p /app/server/storage && \
     chown -R anythingllm:anythingllm /app/server/storage
 
-ENTRYPOINT ["/init"]
+# We exit to the run.sh script which handles the HA environment
+ENTRYPOINT []
+CMD [ "/run.sh" ]
