@@ -20,30 +20,11 @@ In de Home Assistant Add-on instellingenpagina kun je de volgende opties instell
 
 | Optie | Beschrijving | Standaard |
 |---|---|---|
-| `admin_email` | E-mailadres voor het eerste beheerderaccount | `jeroen.meirlaen@gmail.com` |
+| `admin_email` | E-mailadres voor het eerste beheerderaccount | `email@email.com` |
 | `admin_password` | Wachtwoord voor het eerste beheerderaccount | (Willekeurig gegenereerd in logs) |
 | `encryption_key` | 32-byte hex sleutel (`openssl rand -hex 32`) | (Automatisch aangemaakt en bewaard) |
 | `tz` | Tijdzone (bijv. Europe/Brussels) | `Europe/Brussels` |
 | `log_level` | Logboek detailniveau (debug, info, warn, error) | `info` |
-
----
-
-## Installatiemethodes
-
-### Methode 1: Lokale Add-on (Direct in Home Assistant)
-1. Installeer de add-on **Samba Share** of **Studio Code Server** in Home Assistant.
-2. Ga naar de map `/addons` op je Home Assistant.
-3. Maak een map `trek` aan en plaats alle gegenereerde bestanden hierin.
-4. Ga naar **Instellingen > Add-ons > Add-on Store**.
-5. Klik rechtsboven op de drie puntjes (⋮) en kies **Controleren op updates**.
-6. Onder **Lokale Add-ons** verschijnt **TREK**. Klik op **Installeren**.
-7. Klik op **Start** en open de Web UI of Ingress in je zijbalk!
-
-### Methode 2: Eigen GitHub Repository
-1. Maak een nieuwe repository op GitHub (bijv. `ha-addons`).
-2. Plaats de bestanden met de `repository.yaml` in de root en de add-on in de map `trek/`.
-3. In Home Assistant: **Instellingen > Add-ons > Add-on Store > ⋮ Repositories**.
-4. Voeg je GitHub repository URL toe.
 
 ---
 
