@@ -77,6 +77,10 @@ if [ -d "$APP_UPLOADS" ] && [ ! -L "$APP_UPLOADS" ]; then
 fi
 ln -sfn "$PERSIST_UPLOADS" "$APP_UPLOADS"
 
+# Rechten instellen zodat de 'node' gebruiker (UID 1000) mag schrijven naar /share/trek
+chmod -R 777 "$PERSIST_DATA" "$PERSIST_UPLOADS" 2>/dev/null || true
+chown -R 1000:1000 "$PERSIST_DATA" "$PERSIST_UPLOADS" "$APP_DATA" "$APP_UPLOADS" 2>/dev/null || true
+
 export NODE_ENV=production
 export PORT=3000
 
@@ -87,11 +91,24 @@ echo "[INFO] Timezone set to: ${TZ:-Europe/Brussels}"
 echo "[INFO] Starting TREK on port ${PORT}..."
 echo "============================================================"
 
-# Handover to default Node entrypoint
-if [ -f "/app/dist/server/index.js" ]; then
+# Overdragen aan het officiële TREK container entrypoint
+if [ -x "/usr/local/bin/trek-entrypoint" ]; then
+  echo "[INFO] Executing official /usr/local/bin/trek-entrypoint..."
+  exec /usr/local/bin/trek-entrypoint "$@"
+elif [ -f "/app/server/dist/index.js" ]; then
+  exec node /app/server/dist/index.js
+elif [ -f "/app/dist/server/index.js" ]; then
   exec node /app/dist/server/index.js
+elif [ -f "/app/dist/index.js" ]; then
+  exec node /app/dist/index.js
 elif [ -f "/app/server.js" ]; then
   exec node /app/server.js
 else
-  exec npm start
+  FOUND_ENTRY=$(find /app -name "index.js" -not -path "*/node_modules/*" 2>/dev/null | head -n 1)
+  if [ -n "$FOUND_ENTRY" ]; then
+    exec node "$FOUND_ENTRY"
+  else
+    echo "[ERROR] Kon startbestand van de container niet vinden."
+    exit 1
+  fi
 fi
