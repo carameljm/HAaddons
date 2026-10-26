@@ -1,0 +1,16 @@
+configuration:
+  admin_email:
+    name: "Admin Email"
+    description: "Email address for the initial TREK administrator account."
+  admin_password:
+    name: "Admin Password"
+    description: "Password for the admin account. Leave empty to auto-generate in container logs."
+  encryption_key:
+    name: "Encryption Key (32-byte hex)"
+    description: "Secret key used to encrypt sensitive database values. Leave empty to auto-generate."
+  tz:
+    name: "Timezone"
+    description: "Timezone for application schedules and logs (e.g. Europe/Brussels or UTC)."
+  log_level:
+    name: "Log Level"
+    description: "Verbosity of the add-on logs (info, debug, warn, error)."

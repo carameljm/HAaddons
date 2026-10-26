@@ -1,0 +1,16 @@
+configuration:
+  admin_email:
+    name: "Beheerder E-mailadres"
+    description: "Het e-mailadres voor het initiële administrator account van TREK."
+  admin_password:
+    name: "Beheerder Wachtwoord"
+    description: "Wachtwoord voor het admin account. Laat leeg om automatisch te genereren in het logboek."
+  encryption_key:
+    name: "Versleutelingssleutel (32-byte hex)"
+    description: "Geheime sleutel voor het versleutelen van data en API tokens. Laat leeg om automatisch te genereren."
+  tz:
+    name: "Tijdzone"
+    description: "Tijdzone voor het loggen en reisdata (bijv. Europe/Brussels of Europe/Amsterdam)."
+  log_level:
+    name: "Logboek niveau"
+    description: "Detailniveau voor de add-on logs (info, debug, warn, error)."
