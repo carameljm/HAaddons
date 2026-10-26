@@ -2,7 +2,7 @@
 set -e
 
 echo "============================================================"
-echo " Starting TREK - Travel Planner (v4.0.0)"
+echo " Starting TREK - Travel Planner"
 echo " Home Assistant Add-on Runner"
 echo "============================================================"
 
@@ -82,7 +82,7 @@ chmod -R 777 "$PERSIST_DATA" "$PERSIST_UPLOADS" 2>/dev/null || true
 chown -R 1000:1000 "$PERSIST_DATA" "$PERSIST_UPLOADS" "$APP_DATA" "$APP_UPLOADS" 2>/dev/null || true
 
 export NODE_ENV=production
-export PORT=3000
+export PORT=3099
 
 echo "[INFO] Data directories mapped:"
 echo "       -> App Data: $PERSIST_DATA"
