@@ -1,5 +1,5 @@
 name: "TREK - Travel Planner"
-version: "4.0.3"
+version: "4.0.4"
 slug: "trek"
 description: "Self-hosted collaborative travel & trip planning platform for Home Assistant"
 url: "https://github.com/liketrek/TREK"
@@ -11,8 +11,7 @@ startup: application
 boot: auto
 init: false
 homeassistant_api: false
-ingress: true
-ingress_port: 3099
+ingress: false
 environment:
   PORT: "3099"              # Dwingt de TREK-app om op poort 3099 op te starten!
   COOKIE_SECURE: "false"
