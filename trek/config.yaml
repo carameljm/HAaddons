@@ -1,5 +1,5 @@
 name: "TREK - Travel Planner"
-version: "4.0.0"
+version: "4.0.1"
 slug: "trek"
 description: "Self-hosted collaborative travel & trip planning platform for Home Assistant"
 url: "https://github.com/liketrek/TREK"
