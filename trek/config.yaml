@@ -17,7 +17,7 @@ panel_icon: "mdi:airplane-takeoff"
 panel_title: "TREK"
 panel_admin: false
 ports:
-  3099/tcp: 3000
+  3099/tcp: 3099
 ports_description:
   3099/tcp: "Web Interface access (HTTP)"
 map:
