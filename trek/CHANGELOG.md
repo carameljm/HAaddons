@@ -10,3 +10,4 @@
 - Nederlandse en Engelse vertalingen voor Home Assistant Supervisor UI
 - Op poort 3099
 - http
+- Ingress: false
