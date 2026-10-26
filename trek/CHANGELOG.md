@@ -1,6 +1,6 @@
 # Changelog
 
-## 4.0.3
+## 4.0.4
 - Initiële Home Assistant Add-on release voor TREK
 - Ondersteuning voor Home Assistant Ingress met directe zijbalkkoppeling
 - Automatische SQLite persistentie via `/data` (geen dataverlies bij updates)
