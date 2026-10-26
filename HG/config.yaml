@@ -1,0 +1,23 @@
+name: "Honeygain"
+version: "1.0.0"
+slug: "honeygain"
+description: "Run Honeygain on your Home Assistant instance."
+url: "https://honeygain.com"
+arch:
+  - aarch64
+  - amd64
+  - armv7
+startup: application
+init: false
+# Defines the default values for the configuration
+options:
+  email: "user@example.com"
+  password: "secret"
+  device_name: "HomeAssistant-Node"
+  toucan: false
+# Defines the input fields shown in the Add-on Configuration tab
+schema:
+  email: email
+  password: password
+  device_name: str
+  toucan: bool
